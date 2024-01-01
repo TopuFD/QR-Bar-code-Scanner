@@ -43,6 +43,9 @@ dependencies:
   flutter_screenutil: ^5.9.0
   fluttertoast: ^8.2.4
   font_awesome_flutter: ^10.6.0
+  screenshot: ^2.1.0
+  image_gallery_saver: ^2.0.3
+  share_plus: ^7.2.1
   
 
 dev_dependencies:

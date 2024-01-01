@@ -4,26 +4,22 @@ import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
 import 'package:qb_scanner/pages/code_generator/barcode_result.dart';
 import 'package:qb_scanner/pages/code_generator/qrcode_result.dart';
 
-class FacebookPage extends StatelessWidget {
-  const FacebookPage({super.key});
+class TextPage extends StatelessWidget {
+  const TextPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = TextEditingController();
+    TextEditingController textEditingController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Facebook",
-          style: TextStyle(
-              fontSize: 25.sp,
-              color: Colors.black,
-              fontWeight: FontWeight.bold),),
+        title: const Text("Text"),
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
         child: Column(
           children: [
             Text(
-              "Enter Facebook Link :",
+              "Enter Text :",
               style: TextStyle(
                   fontSize: 20.sp,
                   color: Colors.black,
@@ -33,7 +29,7 @@ class FacebookPage extends StatelessWidget {
               height: 10.h,
             ),
             TextFormField(
-              controller: controller,
+              controller: textEditingController,
               decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
             SizedBox(
@@ -44,15 +40,15 @@ class FacebookPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      if (controller.text.isNotEmpty) {
-                        RegExp facebookDomains = RegExp(
-                            r"(facebook\.com|Facebook\.com|fb\.com|Fb\.com|messenger\.com|Messenger\.com)");
-                        if (facebookDomains.hasMatch(controller.text)) {
+                      if (textEditingController.text.isNotEmpty) {
+                       // ignore: non_constant_identifier_names
+                       RegExp TextRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                        if (TextRegex.hasMatch(textEditingController.text)) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => QrGenerateResult(
-                                      qrData: controller.text)));
+                                      qrData: textEditingController.text)));
                         } else {
                           CustomToast().showToast("Enter the Right url");
                         }
@@ -60,18 +56,18 @@ class FacebookPage extends StatelessWidget {
                         CustomToast().showToast("Enter you Link");
                       }
                     },
-                    child: const Text("QR Generate")),
+                    child: Text("QR Generate",style: TextStyle(fontSize: 15.sp,color: Colors.black),)),
                 ElevatedButton(
                     onPressed: () {
-                      if (controller.text.isNotEmpty) {
-                        RegExp facebookDomains = RegExp(
-                            r"(facebook\.com|Facebook\.com|fb\.com|Fb\.com|messenger\.com|Messenger\.com)");
-                        if (facebookDomains.hasMatch(controller.text)) {
+                      if (textEditingController.text.isNotEmpty) {
+                        // ignore: non_constant_identifier_names
+                        RegExp TextRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                        if (TextRegex.hasMatch(textEditingController.text)) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => BarcodeGenerateResult(
-                                        barcodeData: controller.text,
+                                        barcodeData: textEditingController.text,
                                       )));
                         } else {
                           CustomToast().showToast("Enter the Right url");
@@ -80,9 +76,9 @@ class FacebookPage extends StatelessWidget {
                         CustomToast().showToast("Enter you Link");
                       }
                     },
-                    child: const Text("Barcode Generate")),
+                    child: Text("Barcode Generate",style: TextStyle(fontSize: 15.sp,color: Colors.black),)),
               ],
-            ),
+            )
           ],
         ),
       ),
