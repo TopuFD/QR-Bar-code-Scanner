@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
+import 'package:qb_scanner/model/data_model.dart';
 import 'package:qb_scanner/pages/code_scanner/barcod_scanned.dart';
 import 'package:qb_scanner/pages/code_scanner/qr_scanned.dart';
 
@@ -16,7 +18,7 @@ class ScannerPage extends StatefulWidget {
 }
 
 class _ScannerPageState extends State<ScannerPage> {
-  String qrResult = "";
+  var historyBox = Hive.box("History");
 
   Future<void> qrCodeScanner() async {
     try {
@@ -28,13 +30,19 @@ class _ScannerPageState extends State<ScannerPage> {
       );
 
       if (qrCode != "-1" && qrCode.isNotEmpty) {
+        var scanDateTime = DateTime.now();
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) => ResultPage(
                       qrResult: qrCode,
-                    )));
+                    ))).then((value) {
+          var qrHistory =
+              DataModel(title: qrCode, date: scanDateTime.toString());
+          historyBox.add(qrHistory);
+          qrHistory.save();
+        });
       }
     } on PlatformException {
       CustomToast().showToast("Code is not Recognize");
@@ -43,21 +51,27 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Future<void> barCodeScanner() async {
     try {
-      String qrCode = await FlutterBarcodeScanner.scanBarcode(
+      String barcode = await FlutterBarcodeScanner.scanBarcode(
         "#001DF7",
         "Cancel",
         true,
         ScanMode.BARCODE,
       );
 
-      if (qrCode != "-1" && qrCode.isNotEmpty) {
+      if (barcode != "-1" && barcode.isNotEmpty) {
+        var dateTime = DateTime.now();
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) => BarcodeResult(
-                      barCode: qrCode,
-                    )));
+                      barCode: barcode,
+                    ))).then((value) {
+          var barCodeHistory =
+              DataModel(title: barcode, date: dateTime.toString());
+          historyBox.add(barCodeHistory);
+          barCodeHistory.save();
+        });
       }
     } on PlatformException {
       CustomToast().showToast("Code is not Recognize");
@@ -70,7 +84,7 @@ class _ScannerPageState extends State<ScannerPage> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "QR Scanner",
+          "Code Scanner",
           style: TextStyle(
               fontSize: 25.sp,
               color: Colors.black,
@@ -82,8 +96,10 @@ class _ScannerPageState extends State<ScannerPage> {
           children: [
             DrawerHeader(
                 decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5),bottomRight: Radius.circular(5)),
-                  color: Colors.white),
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5)),
+                    color: Colors.white),
                 child: Column(
                   children: [
                     Image.asset(
@@ -103,6 +119,10 @@ class _ScannerPageState extends State<ScannerPage> {
                     ),
                   ],
                 )),
+            const ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text("Favorite"),
+            ),
             ListTile(
               leading: const Icon(Icons.mic),
               title: const Text('Beep'),

@@ -19,6 +19,7 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: FloatingNavbar(
+        elevation: 0,
         backgroundColor: Colors.white,
         selectedBackgroundColor: Colors.blue,
         unselectedItemColor: Colors.black,

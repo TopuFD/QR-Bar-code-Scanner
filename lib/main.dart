@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qb_scanner/Utils/colors.dart';
+import 'package:qb_scanner/model/data_model.dart';
 import 'package:qb_scanner/pages/bottombar.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(DataModelAdapter());
+  await Hive.openBox("History");
+  await Hive.openBox("Favorite");
   runApp(const MyApp());
 }
 
@@ -23,7 +32,6 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
-            
               backgroundColor: ColorsPage().appbarBg,
             ),
             useMaterial3: true,
