@@ -1,7 +1,9 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
 import 'package:qb_scanner/pages/code_scanner/barcod_scanned.dart';
 import 'package:qb_scanner/pages/code_scanner/qr_scanned.dart';
@@ -74,24 +76,88 @@ class _ScannerPageState extends State<ScannerPage> {
               color: Colors.black,
               fontWeight: FontWeight.bold),
         ),
-        leading: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.menu,
-              size: 30.h,
-            )),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5),bottomRight: Radius.circular(5)),
+                  color: Colors.white),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "images/settings.png",
+                      height: 65.h,
+                      width: 65.w,
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Text(
+                      "QR/Bar Code Scanner",
+                      style: TextStyle(
+                          fontSize: 25.sp,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )),
+            ListTile(
+              leading: const Icon(Icons.mic),
+              title: const Text('Beep'),
+              subtitle: const Text("on"),
+              trailing: Switch(value: true, onChanged: (value) {}),
+            ),
+            ListTile(
+              leading: const Icon(Icons.vibration),
+              title: const Text('Vibrate'),
+              subtitle: const Text("on"),
+              trailing: Switch(value: true, onChanged: (value) {}),
+            ),
+            ListTile(
+              leading: const FaIcon(FontAwesomeIcons.lightbulb),
+              title: const Text('Theme'),
+              subtitle: const Text("Light"),
+              trailing: Switch(value: true, onChanged: (value) {}),
+            ),
+            const Divider(),
+            const ListTile(
+              leading: Icon(Icons.star),
+              title: Text('Rate Us'),
+            ),
+            const ListTile(
+              leading: Icon(Icons.privacy_tip),
+              title: Text('Privacy Policy'),
+            ),
+            const ListTile(
+              leading: Icon(Icons.feedback),
+              title: Text('Feedback'),
+            ),
+            const ListTile(
+              leading: Icon(Icons.verified),
+              title: Text('version'),
+              subtitle: Text("1.0.1"),
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Column(
           children: <Widget>[
-            Text(
-              "Click The Button To Scan",
-              style: TextStyle(
-                  fontSize: 23.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            SizedBox(
+              height: 5.h,
             ),
+            AnimatedTextKit(repeatForever: true, animatedTexts: [
+              TypewriterAnimatedText(
+                  speed: const Duration(milliseconds: 120),
+                  "Click The Button To Scan",
+                  textStyle: TextStyle(
+                      fontSize: 23.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)),
+            ]),
             SizedBox(
               height: 10.h,
             ),
@@ -101,24 +167,16 @@ class _ScannerPageState extends State<ScannerPage> {
                 InkWell(
                   onTap: () {
                     qrCodeScanner();
-                    // if (qrResult.isNotEmpty) {
-                    //   Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (_) => ResultPage(
-                    //                 qrResult: qrResult,
-                    //               )));
-                    // }
                   },
                   child: Container(
                     height: 130.h,
                     width: 120.w,
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                         boxShadow: const [
                           BoxShadow(
-                              color: Color.fromARGB(165, 0, 0, 0),
+                              color: Color.fromARGB(255, 160, 159, 159),
                               blurRadius: 4.0,
                               spreadRadius: 1.0,
                               offset: Offset.zero)
@@ -151,7 +209,7 @@ class _ScannerPageState extends State<ScannerPage> {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: const [
                           BoxShadow(
-                              color: Color.fromARGB(165, 0, 0, 0),
+                              color: Color.fromARGB(255, 160, 159, 159),
                               blurRadius: 4.0,
                               spreadRadius: 1.0,
                               offset: Offset.zero)
@@ -161,7 +219,7 @@ class _ScannerPageState extends State<ScannerPage> {
                         Image.asset(
                           "images/barcode.png",
                           width: 80.w,
-                          height: 90.h,
+                          height: 95.h,
                         ),
                         SizedBox(
                           height: 5.h,

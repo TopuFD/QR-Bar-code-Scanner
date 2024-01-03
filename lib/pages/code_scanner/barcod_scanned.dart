@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
@@ -35,16 +39,16 @@ class _BarcodeResultState extends State<BarcodeResult> {
               icon: Icon(
                 Icons.delete,
                 color: Colors.red,
-                size: 35.sp,
+                size: 30.sp,
               ))
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -56,12 +60,43 @@ class _BarcodeResultState extends State<BarcodeResult> {
                         spreadRadius: 1.0,
                         offset: Offset.zero)
                   ]),
-              child: Text(
-                "Barcode : ${widget.barCode}",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22.sp,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Link Hare :",
+                        style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(1.h),
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(50)),
+                          child: IconButton(
+                              onPressed: () {
+                                toCopy();
+                              },
+                              icon: Icon(
+                                Icons.copy,
+                                size: 20.sp,
+                                color: Colors.white,
+                              ))),
+                    ],
+                  ),
+                  SelectableText(
+                    widget.barCode,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22.sp,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -91,11 +126,9 @@ class _BarcodeResultState extends State<BarcodeResult> {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: IconButton(
-                                onPressed: () {
-                                  toCopy();
-                                },
+                                onPressed: () {},
                                 icon: Icon(
-                                  Icons.copy,
+                                  Icons.favorite,
                                   size: 20.sp,
                                   color: Colors.white,
                                 ))),
@@ -119,7 +152,9 @@ class _BarcodeResultState extends State<BarcodeResult> {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  toShare();
+                                },
                                 icon: Icon(
                                   Icons.share,
                                   size: 20.sp,
@@ -143,8 +178,8 @@ class _BarcodeResultState extends State<BarcodeResult> {
                     ),
                     ElevatedButton(
                         style: ButtonStyle(
-                            fixedSize: MaterialStateProperty.all(
-                                Size(270.w, 50.h)),
+                            fixedSize:
+                                MaterialStateProperty.all(Size(270.w, 50.h)),
                             shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
@@ -186,6 +221,7 @@ class _BarcodeResultState extends State<BarcodeResult> {
     }
   }
 
+  //capture and download qr code
   Future<void> captureAndDownload() async {
     try {
       Uint8List? image = await screenshotController.capture();
@@ -194,6 +230,24 @@ class _BarcodeResultState extends State<BarcodeResult> {
         CustomToast().showToast("Saved Successfully");
       } else {
         CustomToast().showToast("Faild To Screenshot");
+      }
+    } catch (e) {
+      CustomToast().showToast(e.toString());
+    }
+  }
+
+  //here is share method
+  Future<void> toShare() async {
+    try {
+      Uint8List? imageBytes = await screenshotController.capture();
+      if (imageBytes != null) {
+        // Save the image bytes to a file
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/widget_image.png');
+        await file.writeAsBytes(imageBytes);
+        await Share.shareXFiles(
+          [XFile(file.path)],
+        );
       }
     } catch (e) {
       CustomToast().showToast(e.toString());

@@ -118,41 +118,41 @@ class CodeCreatePage extends StatelessWidget {
                         color: Colors.blueGrey,
                       ),
                       "Website"),
-                  _customButton(
-                      () {},
-                      const Icon(
-                        Icons.contact_page,
-                        color: Colors.blue,
-                      ),
-                      "Contact"),
-                  _customButton(
-                      () {},
-                      const Icon(
-                        Icons.wifi,
-                        color: Colors.blue,
-                      ),
-                      "Wi-Fi"),
-                  _customButton(
-                      () {},
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.blue,
-                      ),
-                      "Location"),
-                  _customButton(
-                      () {},
-                      const FaIcon(
-                        FontAwesomeIcons.calendar,
-                        color: Colors.purple,
-                      ),
-                      "Calendar"),
-                  _customButton(
-                      () {},
-                      const Icon(
-                        Icons.apps,
-                        color: Colors.blue,
-                      ),
-                      "Apps"),
+                  // _customButton(
+                  //     () {},
+                  //     const Icon(
+                  //       Icons.contact_page,
+                  //       color: Colors.blue,
+                  //     ),
+                  //     "Contact"),
+                  // _customButton(
+                  //     () {},
+                  //     const Icon(
+                  //       Icons.wifi,
+                  //       color: Colors.blue,
+                  //     ),
+                  //     "Wi-Fi"),
+                  // _customButton(
+                  //     () {},
+                  //     const Icon(
+                  //       Icons.location_on,
+                  //       color: Colors.blue,
+                  //     ),
+                  //     "Location"),
+                  // _customButton(
+                  //     () {},
+                  //     const FaIcon(
+                  //       FontAwesomeIcons.calendar,
+                  //       color: Colors.purple,
+                  //     ),
+                  //     "Calendar"),
+                  // _customButton(
+                  //     () {},
+                  //     const Icon(
+                  //       Icons.apps,
+                  //       color: Colors.blue,
+                  //     ),
+                  //     "Apps"),
                   _customButton(() {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => const TextPage()));
