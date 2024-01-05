@@ -132,21 +132,36 @@ class _ScannerPageState extends State<ScannerPage> {
                     context, MaterialPageRoute(builder: (_) => FavoritePage()));
               },
               child: const ListTile(
-                leading: Icon(Icons.favorite),
+                leading: Icon(
+                  Icons.favorite,
+                  color: Colors.blueGrey,
+                ),
                 title: Text("Favorite"),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.mic),
+              leading: const Icon(
+                Icons.mic,
+                color: Colors.blueGrey,
+              ),
               title: const Text('Beep'),
               subtitle: const Text("on"),
-              trailing: Switch(value: true, onChanged: (value) {}),
+              trailing: Switch(
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.blue,
+                  value: true,
+                  onChanged: (value) {}),
             ),
             ListTile(
-              leading: const Icon(Icons.vibration),
+              leading: const Icon(
+                Icons.vibration,
+                color: Colors.blueGrey,
+              ),
               title: const Text('Vibrate'),
               subtitle: vibrate ? const Text("ON") : const Text("OFF"),
               trailing: Switch(
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.blue,
                   value: vibrate,
                   onChanged: (value) {
                     setState(() {
@@ -155,26 +170,45 @@ class _ScannerPageState extends State<ScannerPage> {
                   }),
             ),
             ListTile(
-              leading: const FaIcon(FontAwesomeIcons.lightbulb),
+              leading: const FaIcon(
+                FontAwesomeIcons.lightbulb,
+                color: Colors.blueGrey,
+              ),
               title: const Text('Theme'),
               subtitle: const Text("Light"),
-              trailing: Switch(value: true, onChanged: (value) {}),
+              trailing: Switch(
+                  activeColor: Colors.white,
+                  activeTrackColor: Colors.blue,
+                  value: true,
+                  onChanged: (value) {}),
             ),
             const Divider(),
             const ListTile(
-              leading: Icon(Icons.star),
+              leading: Icon(
+                Icons.star,
+                color: Colors.blueGrey,
+              ),
               title: Text('Rate Us'),
             ),
             const ListTile(
-              leading: Icon(Icons.privacy_tip),
+              leading: Icon(
+                Icons.question_mark_outlined,
+                color: Colors.blueGrey,
+              ),
               title: Text('Privacy Policy'),
             ),
             const ListTile(
-              leading: Icon(Icons.feedback),
+              leading: Icon(
+                Icons.feedback_outlined,
+                color: Colors.blueGrey,
+              ),
               title: Text('Feedback'),
             ),
             const ListTile(
-              leading: Icon(Icons.verified),
+              leading: Icon(
+                Icons.verified,
+                color: Colors.blueGrey,
+              ),
               title: Text('version'),
               subtitle: Text("1.0.1"),
             ),
