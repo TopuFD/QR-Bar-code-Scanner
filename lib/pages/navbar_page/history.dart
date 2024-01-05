@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:lottie/lottie.dart';
@@ -22,11 +21,21 @@ class _HistoryPageState extends State<HistoryPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-              onPressed: () {
-                historyBox.clear();
-              },
-              icon: const Icon(Icons.delete))
+          TextButton(
+            onPressed: () {
+              historyBox.clear();
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.h),
+              child: Text(
+                "Delete All",
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          )
         ],
         title: const Text("History"),
       ),
@@ -56,7 +65,11 @@ class _HistoryPageState extends State<HistoryPage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 6.w, vertical: 5.h),
                               child: ListTile(
-                                // ignore: prefer_const_constructors
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      historyBox.deleteAt(index);
+                                    },
+                                    icon: const Icon(Icons.delete)),
                                 leading: Icon(
                                   Icons.history,
                                   color: Colors.purple,
@@ -74,13 +87,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (_) {
                                       return ResultPage(
-                                          qrResult: data[index].title);
+                                        qrResult: data[index].title,
+                                        date: data[index].date,
+                                      );
                                     }));
                                   } else {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (_) {
                                       return BarcodeResult(
-                                          barCode: data[index].title);
+                                        barCode: data[index].title,
+                                        date: data[index].date,
+                                      );
                                     }));
                                   }
                                 },

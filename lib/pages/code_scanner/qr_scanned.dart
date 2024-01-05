@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
+import 'package:qb_scanner/model/data_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -14,7 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class ResultPage extends StatefulWidget {
   String qrResult;
-  ResultPage({super.key, required this.qrResult});
+  String date;
+  ResultPage({super.key, required this.qrResult, required this.date});
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -22,6 +25,7 @@ class ResultPage extends StatefulWidget {
 
 class _ResultPageState extends State<ResultPage> {
   ScreenshotController screenshotController = ScreenshotController();
+  var favoriteBox = Hive.box("Favorite");
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +130,9 @@ class _ResultPageState extends State<ResultPage> {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  favorite();
+                                },
                                 icon: Icon(
                                   Icons.favorite,
                                   size: 20.sp,
@@ -168,6 +174,7 @@ class _ResultPageState extends State<ResultPage> {
                     Screenshot(
                       controller: screenshotController,
                       child: QrImageView(
+                        backgroundColor: Colors.white,
                         data: widget.qrResult,
                         version: QrVersions.auto,
                         size: 140.h,
@@ -208,6 +215,20 @@ class _ResultPageState extends State<ResultPage> {
     );
   }
 
+  //add to favorite
+  Future<void> favorite() async {
+    try {
+      var qrCodeFavorite = DataModel(title: widget.qrResult, date: widget.date);
+      await favoriteBox.add(qrCodeFavorite);
+      await qrCodeFavorite.save().then((value) {
+        CustomToast().showToast("Add Favorite");
+      });
+    } catch (e) {
+      CustomToast().showToast("Error");
+    }
+  }
+
+  // launched to url
   Future<void> _launcherUrl() async {
     if (await canLaunchUrl(Uri.parse(widget.qrResult))) {
       await launchUrl(Uri.parse(widget.qrResult));
@@ -227,7 +248,7 @@ class _ResultPageState extends State<ResultPage> {
       CustomToast().showToast("Faild To Copyied");
     }
   }
-
+// code capture and download method
   Future<void> captureAndDownload() async {
     try {
       Uint8List? image = await screenshotController.capture();
@@ -246,7 +267,7 @@ class _ResultPageState extends State<ResultPage> {
   Future<void> toShare() async {
     try {
       Uint8List? imageBytes = await screenshotController.capture();
-            if (imageBytes != null) {
+      if (imageBytes != null) {
         // Save the image bytes to a file
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/widget_image.png');

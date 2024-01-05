@@ -1,9 +1,9 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:qb_scanner/pages/tabs/code_generator.dart';
-import 'package:qb_scanner/pages/tabs/history.dart';
-import 'package:qb_scanner/pages/tabs/scanner.dart';
+import 'package:qb_scanner/pages/navbar_page/code_generator.dart';
+import 'package:qb_scanner/pages/navbar_page/history.dart';
+import 'package:qb_scanner/pages/navbar_page/scanner.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});

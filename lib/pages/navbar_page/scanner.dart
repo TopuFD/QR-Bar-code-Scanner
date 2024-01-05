@@ -9,6 +9,8 @@ import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
 import 'package:qb_scanner/model/data_model.dart';
 import 'package:qb_scanner/pages/code_scanner/barcod_scanned.dart';
 import 'package:qb_scanner/pages/code_scanner/qr_scanned.dart';
+import 'package:qb_scanner/pages/favorite.dart';
+import 'package:vibration/vibration.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({super.key});
@@ -19,6 +21,7 @@ class ScannerPage extends StatefulWidget {
 
 class _ScannerPageState extends State<ScannerPage> {
   var historyBox = Hive.box("History");
+  bool vibrate = true;
 
   Future<void> qrCodeScanner() async {
     try {
@@ -31,12 +34,14 @@ class _ScannerPageState extends State<ScannerPage> {
 
       if (qrCode != "-1" && qrCode.isNotEmpty) {
         var scanDateTime = DateTime.now();
+        vibrate ? Vibration.vibrate() : Vibration.cancel();
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) => ResultPage(
                       qrResult: qrCode,
+                      date: scanDateTime.toString(),
                     ))).then((value) {
           var qrHistory =
               DataModel(title: qrCode, date: scanDateTime.toString());
@@ -60,12 +65,14 @@ class _ScannerPageState extends State<ScannerPage> {
 
       if (barcode != "-1" && barcode.isNotEmpty) {
         var dateTime = DateTime.now();
+        vibrate ? Vibration.vibrate() : Vibration.cancel();
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (_) => BarcodeResult(
                       barCode: barcode,
+                      date: dateTime.toString(),
                     ))).then((value) {
           var barCodeHistory =
               DataModel(title: barcode, date: dateTime.toString());
@@ -119,9 +126,15 @@ class _ScannerPageState extends State<ScannerPage> {
                     ),
                   ],
                 )),
-            const ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text("Favorite"),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => FavoritePage()));
+              },
+              child: const ListTile(
+                leading: Icon(Icons.favorite),
+                title: Text("Favorite"),
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.mic),
@@ -132,8 +145,14 @@ class _ScannerPageState extends State<ScannerPage> {
             ListTile(
               leading: const Icon(Icons.vibration),
               title: const Text('Vibrate'),
-              subtitle: const Text("on"),
-              trailing: Switch(value: true, onChanged: (value) {}),
+              subtitle: vibrate ? const Text("ON") : const Text("OFF"),
+              trailing: Switch(
+                  value: vibrate,
+                  onChanged: (value) {
+                    setState(() {
+                      vibrate = value;
+                    });
+                  }),
             ),
             ListTile(
               leading: const FaIcon(FontAwesomeIcons.lightbulb),

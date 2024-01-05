@@ -4,9 +4,11 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
+import 'package:qb_scanner/model/data_model.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,7 +16,8 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class BarcodeResult extends StatefulWidget {
   String barCode;
-  BarcodeResult({super.key, required this.barCode});
+  String date;
+  BarcodeResult({super.key, required this.barCode, required this.date});
 
   @override
   State<BarcodeResult> createState() => _BarcodeResultState();
@@ -22,6 +25,7 @@ class BarcodeResult extends StatefulWidget {
 
 class _BarcodeResultState extends State<BarcodeResult> {
   ScreenshotController screenshotController = ScreenshotController();
+  var favoriteBox = Hive.box("Favorite");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +130,9 @@ class _BarcodeResultState extends State<BarcodeResult> {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(50)),
                             child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  favorite();
+                                },
                                 icon: Icon(
                                   Icons.favorite,
                                   size: 20.sp,
@@ -168,6 +174,7 @@ class _BarcodeResultState extends State<BarcodeResult> {
                     Screenshot(
                       controller: screenshotController,
                       child: BarcodeWidget(
+                        backgroundColor: Colors.white,
                         data: widget.barCode,
                         barcode: Barcode.code128(),
                         width: 200.w,
@@ -207,6 +214,18 @@ class _BarcodeResultState extends State<BarcodeResult> {
         ),
       ),
     );
+  }
+
+  Future<void> favorite() async {
+    try {
+      var barcodeFavorite = DataModel(title: widget.barCode, date: widget.date);
+      await favoriteBox.add(barcodeFavorite);
+      await barcodeFavorite.save().then((value) {
+        CustomToast().showToast("Add Favorite");
+      });
+    } catch (e) {
+      CustomToast().showToast("Error");
+    }
   }
 
   //This is copy method
