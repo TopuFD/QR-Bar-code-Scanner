@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:qb_scanner/Utils/Reusable_Widget/toast.dart';
+import 'package:qb_scanner/admob%20ad/inteernstitial.dart';
 import 'package:qb_scanner/model/data_model.dart';
 import 'package:qb_scanner/pages/code_scanner/barcod_scanned.dart';
 import 'package:qb_scanner/pages/code_scanner/qr_scanned.dart';
@@ -22,8 +23,10 @@ class ScannerPage extends StatefulWidget {
 class _ScannerPageState extends State<ScannerPage> {
   var historyBox = Hive.box("History");
   bool vibrate = true;
+  InternstitialClass internstitialClass = InternstitialClass();
 
   Future<void> qrCodeScanner() async {
+    internstitialClass.showInterstitialAd();
     try {
       String qrCode = await FlutterBarcodeScanner.scanBarcode(
         "#001DF7",
@@ -55,6 +58,7 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   Future<void> barCodeScanner() async {
+    internstitialClass.showInterstitialAd();
     try {
       String barcode = await FlutterBarcodeScanner.scanBarcode(
         "#001DF7",
@@ -215,105 +219,108 @@ class _ScannerPageState extends State<ScannerPage> {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 5.h,
-            ),
-            AnimatedTextKit(repeatForever: true, animatedTexts: [
-              TypewriterAnimatedText(
-                  speed: const Duration(milliseconds: 120),
-                  "Click The Button To Scan",
-                  textStyle: TextStyle(
-                      fontSize: 23.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
-            ]),
-            SizedBox(
-              height: 10.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                InkWell(
-                  onTap: () {
-                    qrCodeScanner();
-                  },
-                  child: Container(
-                    height: 130.h,
-                    width: 120.w,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color.fromARGB(255, 160, 159, 159),
-                              blurRadius: 4.0,
-                              spreadRadius: 1.0,
-                              offset: Offset.zero)
-                        ]),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "images/qrcode.png",
-                          height: 100.h,
-                          width: 100.w,
-                        ),
-                        Text(
-                          "QR Code",
-                          style:
-                              TextStyle(fontSize: 18.sp, color: Colors.black),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    barCodeScanner();
-                  },
-                  child: Container(
-                    height: 130.h,
-                    width: 120.w,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color.fromARGB(255, 160, 159, 159),
-                              blurRadius: 4.0,
-                              spreadRadius: 1.0,
-                              offset: Offset.zero)
-                        ]),
-                    child: Column(
-                      children: [
-                        Image.asset(
-                          "images/barcode.png",
-                          width: 80.w,
-                          height: 95.h,
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Text("Bar Code",
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 5.h,
+              ),
+              AnimatedTextKit(repeatForever: true, animatedTexts: [
+                TypewriterAnimatedText(
+                    speed: const Duration(milliseconds: 120),
+                    "Click The Button To Scan",
+                    textStyle: TextStyle(
+                        fontSize: 23.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+              ]),
+              SizedBox(
+                height: 10.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      internstitialClass.showInterstitialAd();
+                    },
+                    child: Container(
+                      height: 130.h,
+                      width: 120.w,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 160, 159, 159),
+                                blurRadius: 4.0,
+                                spreadRadius: 1.0,
+                                offset: Offset.zero)
+                          ]),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "images/qrcode.png",
+                            height: 100.h,
+                            width: 100.w,
+                          ),
+                          Text(
+                            "QR Code",
                             style:
-                                TextStyle(fontSize: 18.sp, color: Colors.black))
-                      ],
+                                TextStyle(fontSize: 18.sp, color: Colors.black),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 30.h,
-            ),
-            Container(
-              height: 250.h,
-              color: Colors.blueGrey,
-            )
-          ],
+                  InkWell(
+                    onTap: () {
+                      internstitialClass.showInterstitialAd();
+                      barCodeScanner();
+                    },
+                    child: Container(
+                      height: 130.h,
+                      width: 120.w,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 160, 159, 159),
+                                blurRadius: 4.0,
+                                spreadRadius: 1.0,
+                                offset: Offset.zero)
+                          ]),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "images/barcode.png",
+                            width: 80.w,
+                            height: 95.h,
+                          ),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Text("Bar Code",
+                              style: TextStyle(
+                                  fontSize: 18.sp, color: Colors.black))
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              Container(
+                height: 250.h,
+                color: Colors.blueGrey,
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:qb_scanner/admob%20ad/banner_ad.dart';
 import 'package:qb_scanner/pages/code_generator/generate_feture/email.dart';
 import 'package:qb_scanner/pages/code_generator/generate_feture/facebook.dart';
 import 'package:qb_scanner/pages/code_generator/generate_feture/instaggam.dart';
@@ -10,11 +14,31 @@ import 'package:qb_scanner/pages/code_generator/generate_feture/website.dart';
 import 'package:qb_scanner/pages/code_generator/generate_feture/whatsapp.dart';
 import 'package:qb_scanner/pages/code_generator/generate_feture/youtube.dart';
 
-class CodeCreatePage extends StatelessWidget {
+class CodeCreatePage extends StatefulWidget {
   const CodeCreatePage({super.key});
 
   @override
+  State<CodeCreatePage> createState() => _CodeCreatePageState();
+}
+
+class _CodeCreatePageState extends State<CodeCreatePage> {
+  BannerClass bannerClass = BannerClass();
+  bool isBannerAd = false;
+  @override
+  void initState() {
+    super.initState();
+    bannerClass.bannerAd.load().then((value) {
+      Timer(const Duration(milliseconds: 1200), () {
+        setState(() {
+          isBannerAd = true;
+        });
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var adWidget = AdWidget(ad: bannerClass.bannerAd);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -27,22 +51,12 @@ class CodeCreatePage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: ListView(
-          children: [
-            Container(
-              height: 50.h,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.purple,
-              child: Center(
-                child: Text(
-                  "Banner ad",
-                  style: TextStyle(fontSize: 18.sp, color: Colors.white),
-                ),
-              ),
-            ),
-            SizedBox(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: isBannerAd ? 50.h : 0.h),
+            child: SizedBox(
               height: double.maxFinite,
               child: GridView.count(
                 mainAxisSpacing: 10.h,
@@ -165,12 +179,21 @@ class CodeCreatePage extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: 4.0,
+            left: 0.0,
+            right: 0.0,
+            child: SizedBox(
+              height: 50,
+              child: adWidget,
+            ),
+          ),
+        ],
       ),
     );
   }
-
+  // this is custom Button method
   _customButton(ontap, icon, String text) {
     return InkWell(
       onTap: ontap,
